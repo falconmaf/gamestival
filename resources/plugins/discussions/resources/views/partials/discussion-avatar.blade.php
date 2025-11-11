@@ -1,0 +1,1 @@
+<img src="{{ $user->avatar() }}" alt="$user->name" class="@if($size == 'xs'){{ 'w-7 h-7' }}@else{{ 'w-10 h-10' }}@endif rounded-full" />
