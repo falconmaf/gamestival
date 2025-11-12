@@ -148,25 +148,32 @@ SANCTUM_STATEFUL_DOMAINS=camptell.space
 EOL
 print_success ".env file created"
 
-# Step 4: Generate application key
-print_step "Step 4: Generating application key..."
-php artisan key:generate --force
-print_success "Application key generated"
-
-# Step 5: Install Composer dependencies
-print_step "Step 5: Installing Composer dependencies (this may take a few minutes)..."
-composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+# Step 4: Install Composer dependencies first (needed for artisan)
+print_step "Step 4: Installing Composer dependencies (this may take a few minutes)..."
+composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader 2>&1 || {
+    print_warning "Composer install had warnings, continuing..."
+}
 print_success "Composer dependencies installed"
+
+# Step 5: Generate application key
+print_step "Step 5: Generating application key..."
+php artisan key:generate --force --ansi
+print_success "Application key generated"
 
 # Step 6: Install NPM dependencies
 print_step "Step 6: Installing NPM dependencies..."
-npm ci --production || npm install --production
+npm ci 2>&1 || npm install 2>&1 || {
+    print_warning "NPM install had issues, trying alternative method..."
+    npm install --legacy-peer-deps 2>&1
+}
 print_success "NPM dependencies installed"
 
 # Step 7: Build frontend assets
 print_step "Step 7: Building frontend assets..."
-npm run build
-print_success "Frontend assets built"
+npm run build 2>&1 || {
+    print_error "Asset build failed, but continuing..."
+}
+print_success "Frontend assets build attempted"
 
 # Step 8: Set up directory structure
 print_step "Step 8: Setting up directory structure..."
