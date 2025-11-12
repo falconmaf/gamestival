@@ -150,7 +150,7 @@ print_success ".env file created"
 
 # Step 4: Install Composer dependencies first (needed for artisan)
 print_step "Step 4: Installing Composer dependencies (this may take a few minutes)..."
-composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader 2>&1 || {
+composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-req=ext-exif 2>&1 || {
     print_warning "Composer install had warnings, continuing..."
 }
 print_success "Composer dependencies installed"
