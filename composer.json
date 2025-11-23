@@ -26,6 +26,7 @@
         "laravel/framework": "^12.18",
         "laravel/mcp": "^0.3.2",
         "laravel/pail": "^1.2.2",
+        "laravel/reverb": "^1.6",
         "laravel/tinker": "^2.10.1",
         "laravel/ui": "^4.6",
         "livewire/livewire": "^3.5",
