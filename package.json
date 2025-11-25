@@ -12,9 +12,11 @@
     "alpinejs": "^3.4.2",
     "autoprefixer": "^10.4.19",
     "axios": "^1.8.2",
+    "laravel-echo": "^2.2.6",
     "laravel-vite-plugin": "^1.0",
     "postcss": "^8.4.38",
     "postcss-nesting": "^12.1.1",
+    "pusher-js": "^8.4.0",
     "tailwindcss": "^4.1.12",
     "vite": "^6.2"
   },

@@ -36,6 +36,9 @@
                         <x-app.sidebar-link onclick="event.preventDefault(); new FilamentNotification().title('Modify this button inside of sidebar.blade.php').send()" icon="phosphor-cube" :active="(Request::is('project_b'))">Project B</x-app.sidebar-link>
                         <x-app.sidebar-link onclick="event.preventDefault(); new FilamentNotification().title('Modify this button inside of sidebar.blade.php').send()" icon="phosphor-cube" :active="(Request::is('project_c'))">Project C</x-app.sidebar-link>
                     </x-app.sidebar-dropdown>
+                    <x-app.sidebar-dropdown text="Games" icon="phosphor-game-controller" id="games_dropdown" :active="(Request::is('game-matchs'))" :open="Request::is('game-matchs') ? '1' : '0'">
+                        <x-app.sidebar-link href="{{ route('game-matches.lobby') }}" icon="phosphor-sword" :active="(Request::is('game-matchs'))">Match Game</x-app.sidebar-link>
+                    </x-app.sidebar-dropdown>
                     <x-app.sidebar-link onclick="event.preventDefault(); new FilamentNotification().title('Modify this button inside of sidebar.blade.php').send()" icon="phosphor-pencil-line" active="false">Stories</x-app.sidebar-link>
                     <x-app.sidebar-link  onclick="event.preventDefault(); new FilamentNotification().title('Modify this button inside of sidebar.blade.php').send()" icon="phosphor-users" active="false">Users</x-app.sidebar-link>
                 </div>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\GameMatchLobby;
 use Wave\Actions\Reset;
 use App\Models\User;
 use Wave\Page;
@@ -19,6 +20,9 @@ Route::get('logout', '\Wave\Http\Controllers\LogoutController@logout')->name('wa
 Route::view('install', 'wave::install')->name('wave.install');
 
 Route::group(['middleware' => 'auth'], function () {
+    // Game Match Lobby Route
+    Route::get('game-matchs', GameMatchLobby::class)->name('game-matches.lobby');
+
     Route::redirect('settings', 'settings/profile')->name('settings');
 
     if (config('wave.billing_provider') == 'paddle') {

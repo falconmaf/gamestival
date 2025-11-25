@@ -87,6 +87,103 @@ Wave extensively uses caching for performance:
 3. Demo mode allows theme switching via `theme` cookie
 4. Theme-specific colors configured in `WaveServiceProvider::setDefaultThemeColors()`
 
+## Wave Framework Extension Guidelines
+
+**CRITICAL: Follow Wave's layered architecture when extending the application**
+
+### Where to Add Custom Code
+
+**✅ DO - Application Layer (`app/` and `resources/themes/{theme}/`):**
+- Custom Livewire components in `app/Livewire/`
+- Custom models in `app/Models/` (extend Wave models when needed)
+- Filament resources in `app/Filament/Resources/`
+- Theme pages in `resources/themes/{theme}/pages/` using Laravel Folio
+- Theme components in `resources/themes/{theme}/components/`
+- Theme partials in `resources/themes/{theme}/partials/`
+- Custom routes in `routes/web.php` (never modify `wave/routes/web.php`)
+
+**❌ DON'T - Never Modify Wave Core (`wave/`):**
+- Never edit files in `wave/` directory directly
+- Wave core is updated via `composer update` and your changes will be lost
+- Instead, extend Wave classes in `app/` layer or override via service providers
+
+### Theme-Based Development
+
+**All custom pages MUST use Laravel Folio in your theme's `pages/` folder:**
+```php
+// ✅ CORRECT: Create pages in active theme
+resources/themes/anchor/pages/game-matches/lobby.blade.php  // → /game-matches/lobby
+
+// ❌ WRONG: Don't create pages outside theme structure
+resources/views/game-matches.blade.php
+```
+
+**Livewire Components for Theme Pages:**
+```php
+// When creating Livewire full-page components, specify the theme layout:
+public function render()
+{
+    return view('livewire.game-match-lobby')
+        ->layout('theme::components.layouts.app');  // Use theme layout
+}
+```
+
+**Theme View References:**
+```php
+// Use theme:: namespace for theme views
+return view('theme::home');           // resources/themes/{active}/home.blade.php
+@include('theme::partials.alert');    // resources/themes/{active}/partials/alert.blade.php
+```
+
+### Component Organization
+
+**Theme Components Structure:**
+- `resources/themes/{theme}/components/app/` - Authenticated user components (sidebar, header, etc.)
+- `resources/themes/{theme}/components/marketing/` - Guest/marketing components (hero, features, etc.)
+- `resources/themes/{theme}/components/elements/` - Shared reusable components (buttons, cards, etc.)
+- `resources/themes/{theme}/components/layouts/` - Layout files (app.blade.php, marketing.blade.php)
+
+**Elements folder components don't need prefix:**
+```blade
+<!-- ✅ CORRECT: Elements auto-registered -->
+<x-button>Click Me</x-button>  <!-- components/elements/button.blade.php -->
+
+<!-- ❌ WRONG: Don't use elements prefix -->
+<x-elements.button>Click Me</x-elements.button>
+```
+
+### Extending Wave Models
+
+**Extend, don't replace Wave models:**
+```php
+// ✅ CORRECT: app/Models/User.php
+namespace App\Models;
+
+use Wave\User as WaveUser;
+
+class User extends WaveUser
+{
+    // Add custom methods and relationships here
+    public function gameMatches()
+    {
+        return $this->hasMany(GameMatch::class);
+    }
+}
+```
+
+### Plugin Development
+
+**For major features, create plugins instead of cluttering app/:**
+```bash
+php artisan wave:create-plugin  # Creates plugin scaffold in resources/plugins/
+```
+
+**Plugin structure:**
+- Main class in `resources/plugins/YourPlugin/YourPluginPlugin.php`
+- Routes in `resources/plugins/YourPlugin/routes.php`
+- Views in `resources/plugins/YourPlugin/resources/views/`
+- Auto-loaded from `resources/plugins/installed.json`
+
 ## Project-Specific Conventions
 
 ### Models & Database
